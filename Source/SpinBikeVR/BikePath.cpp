@@ -5,19 +5,27 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/TextRenderComponent.h"
+#include "AudioCaptureComponent.h"
+
 // Sets default values
 ABikePath::ABikePath()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Path = CreateDefaultSubobject<USplineComponent>(TEXT("Path"));
-	
+	MicCapture = CreateDefaultSubobject<UAudioCaptureComponent>(TEXT("Mic"));
+	MicCapture->bAutoActivate = true;
 }
-
+void ABikePath::Envelope(const float EnvelopeValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%f"), EnvelopeValue)
+}
 // Called when the game starts or when spawned
 void ABikePath::BeginPlay()
 {
 	Super::BeginPlay();
+	if(MicCapture != nullptr)
+	MicCapture->OnAudioEnvelopeValue.AddDynamic(this, &ABikePath::Envelope);
 	if (PointToStartFrom < Path->GetNumberOfSplinePoints())
 		TotalDistanceElapsed = Path->GetDistanceAlongSplineAtSplinePoint(PointToStartFrom);
 }

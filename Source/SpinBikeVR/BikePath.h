@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SplineComponent.h"
+
 #include "BikePath.generated.h"
 
 
@@ -35,7 +36,11 @@ public:
 	TArray<float> TimeBetweenPoints;
 	UPROPERTY(VisibleAnywhere)
 	float TimeToTraverseSpline = 0;
-	
+	UFUNCTION()
+	void Envelope(const float EnvelopeValue);
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UAudioCaptureComponent* MicCapture;
 private:
 	float TotalDistanceElapsed = 0;
 	
