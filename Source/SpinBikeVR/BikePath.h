@@ -43,5 +43,20 @@ protected:
 	class UAudioCaptureComponent* MicCapture;
 private:
 	float TotalDistanceElapsed = 0;
-	
+	FVector Velocity;
+	// The mass of the car (kg).
+	UPROPERTY(EditAnywhere)
+	float Mass = 1000;
+
+	// The force applied to the car when the throttle is fully down (N).
+	UPROPERTY(EditAnywhere)
+	float MaxDrivingForce = 10000;
+	// Higher means more drag.
+	UPROPERTY(EditAnywhere)
+	float DragCoefficient = 16;
+
+	// Higher means more rolling resistance.
+	UPROPERTY(EditAnywhere)
+	float RollingResistanceCoefficient = 0.015;
+
 };
