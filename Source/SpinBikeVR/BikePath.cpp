@@ -18,28 +18,7 @@ ABikePath::ABikePath()
 }
 void ABikePath::Envelope(const float EnvelopeValue)
 {
-	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	if (Player == nullptr)
-	{
-		return;
-	}
-	if (TotalDistanceElapsed < Path->GetSplineLength())
-	{
-		Player->SetActorTransform(Path->GetTransformAtDistanceAlongSpline(TotalDistanceElapsed, ESplineCoordinateSpace::World));
-		TotalDistanceElapsed += EnvelopeValue * MaxDrivingForce;
-	}
-	//FVector Force = Player->GetActorForwardVector() * MaxDrivingForce * EnvelopeValue;
-	
-	/*Air Resistance*/
-	//Force += -Velocity.GetSafeNormal() * Velocity.SizeSquared() * DragCoefficient;
-	
-	/* Rolling Resistance */
-	//float AccelerationDueToGravity = -GetWorld()->GetGravityZ() / 100;
-	//float NormalForce = Mass * AccelerationDueToGravity;
-	//Force += -Velocity.GetSafeNormal() * RollingResistanceCoefficient * NormalForce;
-
-	//FVector Acceleration = Force / Mass;
-	//Velocity = Velocity + Acceleration; // *DeltaTime
+	EnvelopeSum += EnvelopeValue;
 }
 // Called when the game starts or when spawned
 void ABikePath::BeginPlay()
@@ -72,12 +51,27 @@ void ABikePath::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (TimeElapsed > TimeBetweenIntervals)
+	{
+		LastKnownSum = EnvelopeSum;
+		EnvelopeSum = 0;
+		TimeElapsed = 0;
+		
+	}
+	TimeElapsed += DeltaTime;
+
+	
+
 	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	if (Player == nullptr)
 	{
 		return;
 	}
 
-
+	if (TotalDistanceElapsed < Path->GetSplineLength())
+	{
+		Player->SetActorTransform(Path->GetTransformAtDistanceAlongSpline(TotalDistanceElapsed, ESplineCoordinateSpace::World));
+		TotalDistanceElapsed += LastKnownSum * SpeedScalar;
+	}
 }
 
