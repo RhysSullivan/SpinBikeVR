@@ -8,7 +8,7 @@ public class SpinBikeVR : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AudioCapture" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AudioCapture", "OnlineSubsystem", "OnlineSubsystemUtils", "Voice" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "AudioCapture" });
 
